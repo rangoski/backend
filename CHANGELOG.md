@@ -2,6 +2,48 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.12](https://github.com/reacherhq/backend/compare/v0.3.11...v0.3.12) (2021-10-11)
+
+
+### Features
+
+* Add `smtp_port` field in request for validation through different port ([#233](https://github.com/reacherhq/backend/issues/233)) ([ea6b3fc](https://github.com/reacherhq/backend/commit/ea6b3fc01d406064d99863ad75b68cea8baa4480))
+
+### [0.3.11](https://github.com/reacherhq/backend/compare/v0.3.10...v0.3.11) (2021-09-13)
+
+
+### Bug Fixes
+
+* Adding openssl as a vendored dependency ([#225](https://github.com/reacherhq/backend/issues/225)) ([02255d7](https://github.com/reacherhq/backend/commit/02255d73a78d05fd4355a68ca274d4d46bb67130))
+
+### [0.3.10](https://github.com/reacherhq/backend/compare/v0.3.9...v0.3.10) (2021-07-08)
+
+
+### Bug Fixes
+
+* Filter out username when redacting emails ([#209](https://github.com/reacherhq/backend/issues/209)) ([b6fea2f](https://github.com/reacherhq/backend/commit/b6fea2f8454bd95242a55d75d24aa05cc31749d1))
+* Redact emails in Sentry error messages ([#208](https://github.com/reacherhq/backend/issues/208)) ([f73a209](https://github.com/reacherhq/backend/commit/f73a209ec8a7e2c1529702ff263942b2b96d712c))
+
+### [0.3.9](https://github.com/reacherhq/backend/compare/v0.3.8...v0.3.9) (2021-06-20)
+
+
+### Features
+
+* Add `proxy` field to check_email body ([#205](https://github.com/reacherhq/backend/issues/205)) ([0a54c31](https://github.com/reacherhq/backend/commit/0a54c315dff569fdf30d2edb0ad1769477816aca))
+* Make `x-saasify-proxy-secret` optional ([#204](https://github.com/reacherhq/backend/issues/204)) ([258314e](https://github.com/reacherhq/backend/commit/258314eb47eaec308b5818acde7d18777630cf35))
+
+### [0.3.8](https://github.com/reacherhq/backend/compare/v0.3.7...v0.3.8) (2021-04-05)
+
+
+### Features
+
+* Add Dockerfile ([#184](https://github.com/reacherhq/backend/issues/184)) ([9afbfe0](https://github.com/reacherhq/backend/commit/9afbfe0685d6e55257f7634414f9d9db812519ad))
+
+
+### Bug Fixes
+
+* Update check-if-email-exists deps ([#197](https://github.com/reacherhq/backend/issues/197)) ([cc8f3f0](https://github.com/reacherhq/backend/commit/cc8f3f054bbc3626d4c0f085aa3b02e266eff227))
+
 ### [0.3.7](https://github.com/reacherhq/backend/compare/v0.3.6...v0.3.7) (2021-01-10)
 
 ### [0.3.6](https://github.com/reacherhq/backend/compare/v0.3.5...v0.3.6) (2020-12-14)
@@ -175,7 +217,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* CI tar.gz executable file before release ([#31](https://github.com/reacherhq/backend/issues/31)) ([c1cb9c2](https://github.com/amaurymartiny/reacher-microservices/commit/c1cb9c26bba7ab660258bd3d21d09cf446da0246))
+* CI tar.gz executable file before release ([#31](https://github.com/reacherhq/backend/issues/31)) ([c1cb9c2](https://github.com/reacherhq/reacher-microservices/commit/c1cb9c26bba7ab660258bd3d21d09cf446da0246))
 
 ## 0.1.0 (2020-05-02)
 
@@ -183,14 +225,14 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * Add /verify/demo endpoint ([5b036b2](https://github.com/reacherhq/backend/commit/5b036b2b2fc7d9fa1740dbb1a29b07ec78e3153f))
-* Add a Dockerfile with Tor ([#24](https://github.com/reacherhq/backend/issues/24)) ([53210fc](https://github.com/amaurymartiny/reacher-microservices/commit/53210fcca03d1f4b6baad7573b18c49432e389e7))
+* Add a Dockerfile with Tor ([#24](https://github.com/reacherhq/backend/issues/24)) ([53210fc](https://github.com/reacherhq/reacher-microservices/commit/53210fcca03d1f4b6baad7573b18c49432e389e7))
 * Add bulk verification ([46a418e](https://github.com/reacherhq/backend/commit/46a418e40f9ff1e896eaa00ddeba9d3d6da9abac))
 * Add find or create user ([f06e96a](https://github.com/reacherhq/backend/commit/f06e96a117dcd2eb0535e70e18e69e15d144d48b))
-* Add HTTP server inside Dockerfile ([#28](https://github.com/reacherhq/backend/issues/28)) ([f82610e](https://github.com/amaurymartiny/reacher-microservices/commit/f82610ecdc6f360e3be8f076fab793b13fb88251))
+* Add HTTP server inside Dockerfile ([#28](https://github.com/reacherhq/backend/issues/28)) ([f82610e](https://github.com/reacherhq/reacher-microservices/commit/f82610ecdc6f360e3be8f076fab793b13fb88251))
 * Add serverless rust for email-exists ([3b186fe](https://github.com/reacherhq/backend/commit/3b186fee406af38faf6ec5e82cb68f0d30599b55))
 
 
 ### Bug Fixes
 
 * Allow usage of express middlewares ([a37b8f5](https://github.com/reacherhq/backend/commit/a37b8f5bcbeea366f4c658f6dad4becf38245eeb))
-* Return HTTP error when verification fails ([#30](https://github.com/reacherhq/backend/issues/30)) ([9074768](https://github.com/amaurymartiny/reacher-microservices/commit/90747689ff83640aa5b8b37d54a2f0b09cc433b3))
+* Return HTTP error when verification fails ([#30](https://github.com/reacherhq/backend/issues/30)) ([9074768](https://github.com/reacherhq/reacher-microservices/commit/90747689ff83640aa5b8b37d54a2f0b09cc433b3))

@@ -16,14 +16,12 @@
 
 //! This file implements the `POST /check_email` endpoint.
 
-use super::{
-	header::{check_header, HeaderSecret},
-	known_errors,
-};
+use super::{header::check_header, known_errors};
 use crate::sentry_util;
 use async_recursion::async_recursion;
 use check_if_email_exists::{
-	check_email as ciee_check_email, CheckEmailInput, CheckEmailOutput, Reachable,
+	check_email as ciee_check_email, CheckEmailInput, CheckEmailInputProxy, CheckEmailOutput,
+	Reachable,
 };
 use serde::{Deserialize, Serialize};
 use std::{
@@ -41,6 +39,8 @@ const SMTP_THRESHOLD: u64 = 10;
 pub struct EndpointRequest {
 	from_email: Option<String>,
 	hello_name: Option<String>,
+	proxy: Option<CheckEmailInputProxy>,
+	smtp_port: Option<u16>,
 	to_email: String,
 }
 
@@ -79,12 +79,20 @@ async fn create_check_email_future(
 	// Create Request for check_if_email_exists from body
 	let mut input = CheckEmailInput::new(vec![body.to_email]);
 	input
-		.from_email(body.from_email.unwrap_or_else(|| {
+		.set_from_email(body.from_email.unwrap_or_else(|| {
 			env::var("RCH_FROM_EMAIL").unwrap_or_else(|_| "user@example.org".into())
 		}))
-		.hello_name(body.hello_name.unwrap_or_else(|| "gmail.com".into()));
+		.set_hello_name(body.hello_name.unwrap_or_else(|| "gmail.com".into()));
 
-	input.smtp_timeout(Duration::from_secs(SMTP_THRESHOLD));
+	if let Some(proxy_input) = body.proxy {
+		input.set_proxy(proxy_input);
+	}
+
+	if let Some(smtp_port) = body.smtp_port {
+		input.set_smtp_port(smtp_port);
+	}
+
+	input.set_smtp_timeout(Duration::from_secs(SMTP_THRESHOLD));
 
 	// Retry each future twice, to avoid grey-listing.
 	retry(&input, RetryOption::Direct, 2).await
@@ -106,7 +114,7 @@ async fn retry(
 		count,
 	);
 
-	let result = ciee_check_email(&input)
+	let result = ciee_check_email(input)
 		.await
 		.pop()
 		.expect("Input contains one email, so does output. qed.");
@@ -135,10 +143,7 @@ async fn retry(
 }
 
 /// The main `check_email` function that implements the logic of this route.
-async fn check_email(
-	_: HeaderSecret,
-	body: EndpointRequest,
-) -> Result<impl warp::Reply, warp::Rejection> {
+async fn check_email(body: EndpointRequest) -> Result<impl warp::Reply, warp::Rejection> {
 	// Run `ciee_check_email` with retries if necessary. Also measure the
 	// verification time.
 	let now = Instant::now();
@@ -151,7 +156,8 @@ async fn check_email(
 	};
 
 	// Log on Sentry the `is_reachable` field.
-	// FIXME We should definitely log this somehwere else than Sentry.
+	// We should definitely log this somewhere else than Sentry.
+	// TODO https://github.com/reacherhq/backend/issues/207
 	sentry_util::metrics(
 		format!("is_reachable={:?}", value.is_reachable),
 		retry_option,
