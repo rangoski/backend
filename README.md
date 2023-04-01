@@ -1,5 +1,5 @@
 [![Actions Status](https://github.com/reacherhq/backend/workflows/pr/badge.svg)](https://github.com/reacherhq/backend/actions)
-[![Github Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=https://github.com/sponsors/amaurymartiny)](https://github.com/sponsors/amaurymartiny)
+[![Github Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&link=https://github.com/sponsors/amaurym)](https://github.com/sponsors/amaurym)
 
 <br /><br />
 
@@ -11,7 +11,7 @@
 
 This repository holds the backend for [Reacher](https://reacher.email). The backend is a HTTP server with the following components:
 
--   [`check-if-email-exists`](https://github.com/amaurymartiny/check-if-email-exists), which performs the core email verification logic,
+-   [`check-if-email-exists`](https://github.com/reacherhq/check-if-email-exists), which performs the core email verification logic,
 -   [`warp`](https://github.com/seanmonstar/warp) web framework.
 
 ## Get Started
@@ -36,9 +36,16 @@ docker run -p 8080:8080 reacherhq/backend
 
 You can then send a POST request with the following body to `http://localhost:8080/v0/check_email`:
 
-```json
+```js
 {
-	"to_email": "someone@gmail.com"
+	"to_email": "someone@gmail.com",
+	"from_email": "my@my-server.com", // (optional) email to use in the `FROM` SMTP command, defaults to "user@example.org"
+	"hello_name": "my-server.com",    // (optional) name to use in the `EHLO` SMTP command, defaults to "localhost"
+	"proxy": {                        // (optional) SOCK5 proxy to run the verification through, default is empty
+		"host": "my-proxy.io",
+		"port": 1080
+	},
+	"smtp_port": 587                  // (optional) SMTP port to do the email verification, defaults to 25
 }
 ```
 
@@ -56,19 +63,35 @@ The server will then be listening on `http://127.0.0.1:8080`.
 
 These are the environment variables used to configure the HTTP server:
 
-| Env Var              | Required? | Description                                                                                                                                                                 | Default              |
-| -------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
-| `RCH_FROM_EMAIL`     | No        | The email to use in the `MAIL FROM:` SMTP command.                                                                                                                          | `user@example.org`   |
-| `RCH_HTTP_HOST`      | No        | The host name to bind the HTTP server to.                                                                                                                                   | `127.0.0.1`          |
-| `PORT`               | No        | The port to bind the HTTP server to, populated by Heroku.                                                                                                                   | `8080`               |
-| `RCH_SENTRY_DSN`     | No        | [Sentry](https://sentry.io) DSN used for bug reports.                                                                                                                       | not defined          |
-| `RCH_SAASIFY_SECRET` | No        | All requests must have a `x-saasify-proxy-secret` header set, equal to the value of `RCH_SAASIFY_SECRET`. Also see [#185](https://github.com/reacherhq/backend/issues/185). | `reacher_dev_secret` |
+| Env Var              | Required? | Description                                                                                                       | Default            |
+| -------------------- | --------- | ----------------------------------------------------------------------------------------------------------------- | ------------------ |
+| `RCH_FROM_EMAIL`     | No        | The email to use in the `MAIL FROM:` SMTP command.                                                                | `user@example.org` |
+| `RCH_HTTP_HOST`      | No        | The host name to bind the HTTP server to.                                                                         | `127.0.0.1`        |
+| `PORT`               | No        | The port to bind the HTTP server to, populated by Heroku.                                                         | `8080`             |
+| `RCH_SENTRY_DSN`     | No        | If set, bug reports will be sent to this [Sentry](https://sentry.io) DSN.                                         | not defined        |
+| `RCH_SAASIFY_SECRET` | No        | If set, all requests must have a `x-saasify-proxy-secret` header set, equal to the value of `RCH_SAASIFY_SECRET`. | not defined        |
+| `RUST_LOG`           | No        | One of `trace,debug,warn,error,info`. 💡 PRO TIP: `RUST_LOG=debug` is very handful for debugging purposes.        | not defined                |
 
 ## REST API Documentation
 
-See https://help.reacher.email/rest-api-documentation.
+Read docs on https://help.reacher.email/rest-api-documentation.
 
-Also check the [`openapi.json`](./openapi.json) file for the OpenAPI v3 specification of the backend's API.
+The API basically only exposes one endpoint: `POST /v0/check_email` expecting the following body:
+
+```js
+{
+	"to_email": "someone@gmail.com",
+	"from_email": "my@my-server.com", // (optional) email to use in the `FROM` SMTP command, defaults to "user@example.org"
+	"hello_name": "my-server.com",    // (optional) name to use in the `EHLO` SMTP command, defaults to "localhost"
+	"proxy": {                        // (optional) SOCK5 proxy to run the verification through, default is empty
+		"host": "my-proxy.io",
+		"port": 1080
+	},
+	"smtp_port": 587                  // (optional) SMTP port to do the email verification, defaults to 25
+}
+```
+
+Also check [`openapi.json`](./openapi.json) for the complete OpenAPI specification.
 
 ## License
 
@@ -86,4 +109,4 @@ If you are creating an open source application under a license compatible with t
 
 ## Sponsor my Open-Source Work
 
-If you like my open-source work at Reacher, consider [sponsoring me](https://github.com/sponsors/amaurymartiny/)! You'll also get 8000 free email verifications every month with your Reacher account, and a this contribution would mean A WHOLE LOT to me.
+If you like my open-source work at Reacher, consider [sponsoring me](https://github.com/sponsors/amaurym/)! You'll also get 8000 free email verifications every month with your Reacher account, and a this contribution would mean A WHOLE LOT to me.
